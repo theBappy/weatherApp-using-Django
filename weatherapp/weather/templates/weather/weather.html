@@ -1,0 +1,46 @@
+{% extends 'weather/base.html' %}
+
+{% block title %}Weather App{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-white">Weather App</h2>
+
+    <!-- Weather Form -->
+    <form method="POST" class="d-flex justify-content-center mt-4">
+        {% csrf_token %}
+        <input type="text" name="city" class="form-control w-50 me-2" placeholder="Enter city name..." required>
+        <button type="submit" class="btn btn-primary">Get Weather</button>
+    </form>
+
+    <!-- Error Message -->
+    {% if error_message %}
+        <div class="alert alert-danger mt-3 text-center">{{ error_message }}</div>
+    {% endif %}
+
+    <!-- Weather Details -->
+    {% if weather_data %}
+        <div class="card mt-4 mx-auto text-center" style="width: 350px;">
+            <div class="card-body">
+                <h3 class="card-title">{{ weather_data.city }}</h3>
+                <img src="http://openweathermap.org/img/w/{{ weather_data.icon }}.png" alt="Weather Icon">
+                <h4>{{ weather_data.temperature }}°C</h4>
+                <p>{{ weather_data.description|title }}</p>
+                <p>Humidity: {{ weather_data.humidity }}%</p>
+                <p>Wind Speed: {{ weather_data.wind_speed }} m/s</p>
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if history %}
+        <div class="mt-4 mx-auto text-center" style="width: 500px;">
+            <h4 class="text-light">Recent Searches</h4>
+            <ul class="list-group">
+                {% for search in history %}
+                   <li class="list-group-item">{{ search.city }} - {{ search.searched_at|date:"F d, Y H:i" }}</li> 
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %} 
+</div>
+{% endblock %}
